@@ -2,7 +2,7 @@ name: Wake n8n
 
 on:
   schedule:
-    - cron: '0 * * * *'   # runs every hour, on the hour (UTC)
+    - cron: '7 * * * *'   # runs every hour, on the hour (UTC)
   workflow_dispatch:        # lets you trigger it manually from the Actions tab to test
 
 jobs:
