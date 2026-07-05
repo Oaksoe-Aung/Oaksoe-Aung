@@ -1,0 +1,26 @@
+name: Wake n8n
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # runs every hour, on the hour (UTC)
+  workflow_dispatch:        # lets you trigger it manually from the Actions tab to test
+
+jobs:
+  wake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping n8n until it responds or attempts are exhausted
+        run: |
+          URL="https://n8n-service-330n.onrender.com/healthz"
+          for i in 1 2 3 4 5 6; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$URL" || echo "000")
+            echo "Attempt $i: HTTP $code"
+            if [ "$code" = "200" ]; then
+              echo "n8n responded with 200. Service is awake."
+              exit 0
+            fi
+            echo "Not ready yet, waiting 20s before next attempt..."
+            sleep 20
+          done
+          echo "No 200 after 6 attempts (~5 min). The boot was still likely triggered by the first ping; exiting cleanly."
+          exit 0
