@@ -8,8 +8,6 @@ on:
 jobs:
   wake:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write   # Required for keepalive action to push empty commits/events
     steps:
       - name: Ping n8n until it responds or attempts are exhausted
         run: |
@@ -24,10 +22,3 @@ jobs:
             echo "Not ready yet, waiting 20s before next attempt..."
             sleep 20
           done
-
-      - uses: actions/checkout@v4
-
-      - name: Keepalive Workflow
-        uses: gautamkrishnar/keepalive-workflow@2.0.10
-        with:
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
